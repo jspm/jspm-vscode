@@ -1,0 +1,73 @@
+{
+  "name": "jspm-vscode",
+  "displayName": "jspm-vscode",
+  "description": "JSPM Generator VSCode Extension",
+  "version": "0.1.0",
+  "publisher": "JSPM",
+  "repository": "https://github.com/jspm/jspm-vscode",
+  "engines": {
+    "vscode": "^1.59.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:jspm-vscode.generate",
+    "onCommand:jspm-vscode.install"
+  ],
+  "browser": "./dist/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "JSPM",
+      "properties": {
+        "jspm.generate.preload": {
+          "description": "Whether to preload dependencies for generated maps in HTML generations",
+          "type": "string",
+          "default": "ask",
+          "enum": [
+            "ask",
+            "always",
+            "never"
+          ],
+          "enumDescriptions": [
+            "Ask whether to generate preload injections",
+            "Always generate preloading injections automatically",
+            "Never generate preloading injections"
+          ]
+        },
+        "jspm.generate.integrity": {
+          "description": "Whether to generate integrity for scripts injected in generation workflows",
+          "type": "boolean",
+          "default": true
+        },
+        "jspm.generate.defaultConditions": {
+          "description": "Default environment conditions to generate",
+          "type": "string",
+          "pattern": "^($|(\\s*\\w+\\s*)(,\\s*\\w+\\s*)*$)",
+          "patternErrorMessage": "Must be a comma-separated list of condition names",
+          "default": "production,browser,module"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "jspm-vscode.generate",
+        "title": "JSPM: Generate Import Map"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "build:watch": "rollup -c -w",
+    "test": "code --extensionDevelopmentPath=C:\\Users\\Guy\\Projects\\jspm-vscode --extensionDevelopmentKind=web"
+  },
+  "devDependencies": {
+    "@jspm/generator": "^1.0.0-beta.18",
+    "@jspm/plugin-rollup": "github:jspm/rollup-plugin-jspm#main",
+    "@types/vscode": "^1.59.0",
+    "@vercel/ncc": "^0.33.3",
+    "cjs-module-lexer": "^1.2.2",
+    "rollup": "^2.70.0"
+  }
+}
