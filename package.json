@@ -1,10 +1,11 @@
 {
   "name": "jspm-vscode",
-  "displayName": "jspm-vscode",
+  "displayName": "JSPM Generator",
   "description": "JSPM Generator VSCode Extension",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "JSPM",
   "repository": "https://github.com/jspm/jspm-vscode",
+  "icon": "jspm.png",
   "engines": {
     "vscode": "^1.59.0"
   },
@@ -12,8 +13,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:jspm-vscode.generate",
-    "onCommand:jspm-vscode.install"
+    "onCommand:jspm-vscode.generate"
   ],
   "browser": "./dist/extension.js",
   "contributes": {
@@ -56,11 +56,6 @@
         "title": "JSPM: Generate Import Map"
       }
     ]
-  },
-  "scripts": {
-    "build": "rollup -c",
-    "build:watch": "rollup -c -w",
-    "test": "code --extensionDevelopmentPath=C:\\Users\\Guy\\Projects\\jspm-vscode --extensionDevelopmentKind=web"
   },
   "devDependencies": {
     "@jspm/generator": "^1.0.0-beta.18",
