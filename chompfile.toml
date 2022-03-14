@@ -14,3 +14,7 @@ run = 'rollup -c -w'
 name = 'test'
 deps = ['build']
 run = 'code --extensionDevelopmentPath=C:\Users\Guy\Projects\jspm-vscode --extensionDevelopmentKind=web'
+
+[[task]]
+name = 'publish'
+run = 'vsce publish'
