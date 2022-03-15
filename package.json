@@ -2,7 +2,7 @@
   "name": "jspm-vscode",
   "displayName": "JSPM Generator",
   "description": "JSPM Generator VSCode Extension",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "JSPM",
   "repository": "https://github.com/jspm/jspm-vscode",
   "icon": "jspm.png",
@@ -58,7 +58,7 @@
     ]
   },
   "devDependencies": {
-    "@jspm/generator": "^1.0.0-beta.28",
+    "@jspm/generator": "^1.0.0-beta.29",
     "@jspm/plugin-rollup": "github:jspm/rollup-plugin-jspm#main",
     "@types/vscode": "^1.59.0",
     "@vercel/ncc": "^0.33.3",
