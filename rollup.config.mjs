@@ -8,7 +8,7 @@ export default {
   },
   onwarn () {},
   plugins: [jspmRollup({
-    defaultProvider: 'nodemodules',
+    defaultProvider: 'jspm.io',
     env: ['module', 'production', 'browser', 'vscode'],
   })]
 }

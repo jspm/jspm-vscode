@@ -22,7 +22,7 @@
       "title": "JSPM",
       "properties": {
         "jspm.generate.preload": {
-          "description": "Whether to preload dependencies for generated maps in HTML generations",
+          "description": "Whether or not to inject dependency preloads into resulting HTML.",
           "type": "string",
           "default": "ask",
           "enum": [
@@ -31,21 +31,21 @@
             "never"
           ],
           "enumDescriptions": [
-            "Ask whether to generate preload injections",
-            "Always generate preloading injections automatically",
-            "Never generate preloading injections"
+            "Ask whether to inject dependency preloads.",
+            "Always inject dependency preloads.",
+            "Never inject dependency preloads."
           ]
         },
         "jspm.generate.integrity": {
-          "description": "Whether to generate integrity for scripts injected in generation workflows",
+          "description": "Whether or not to inject script integrity attributes into resulting HTML.",
           "type": "boolean",
           "default": true
         },
         "jspm.generate.defaultConditions": {
-          "description": "Default environment conditions to generate",
+          "description": "Default environment conditions for generated import maps.",
           "type": "string",
           "pattern": "^($|(\\s*\\w+\\s*)(,\\s*\\w+\\s*)*$)",
-          "patternErrorMessage": "Must be a comma-separated list of condition names",
+          "patternErrorMessage": "Must be a comma-separated list of condition names.",
           "default": "production,browser,module"
         }
       }
@@ -58,11 +58,11 @@
     ]
   },
   "devDependencies": {
-    "@jspm/generator": "^1.0.0-beta.29",
+    "@jspm/generator": "^1.1.0",
     "@jspm/plugin-rollup": "github:jspm/rollup-plugin-jspm#main",
-    "@types/vscode": "^1.59.0",
-    "@vercel/ncc": "^0.33.3",
+    "@types/vscode": "^1.76.0",
+    "@vercel/ncc": "^0.33.4",
     "cjs-module-lexer": "^1.2.2",
-    "rollup": "^2.70.0"
+    "rollup": "^2.79.1"
   }
 }

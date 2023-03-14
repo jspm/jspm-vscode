@@ -7,13 +7,9 @@ target = 'dist/extension.js'
 run = 'rollup -c'
 
 [[task]]
-name = 'build:watch'
-run = 'rollup -c -w'
-
-[[task]]
 name = 'test'
 deps = ['build']
-run = 'code --extensionDevelopmentPath=C:\Users\Guy\Projects\jspm-vscode --extensionDevelopmentKind=web'
+run = 'code --extensionDevelopmentPath=$JSPM_VSCODE_PATH --extensionDevelopmentKind=web'
 
 [[task]]
 name = 'publish'
