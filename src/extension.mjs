@@ -1,7 +1,8 @@
 import { Generator } from '@jspm/generator';
-
 const vscode = require('vscode');
 
+// Default available environment conditions (the user can configure their own
+// custom conditions if they want):
 const conditions = [
   'browser',
   'module',
@@ -11,33 +12,39 @@ const conditions = [
   'deno'
 ];
 
-async function cmdGenerate () {
+exports.activate = function(context) {
+  context.subscriptions.push(
+    vscode.commands.registerCommand('jspm-vscode.generate', cmdGenerate)
+  );
+};
+
+
+async function cmdGenerate() {
   const cfg = vscode.workspace.getConfiguration('jspm.generate');
 
   const { activeTextEditor } = vscode.window;
-
   if (!activeTextEditor && !vscode.workspace.workspaceFolders) {
-    vscode.window.showWarningMessage('No file, folder or workspace open');
+    vscode.window.showWarningMessage('No file, folder or workspace open.');
     return;
   }
 
   let fileUri;
   if (activeTextEditor) {
     if (activeTextEditor.document.uri.scheme === 'untitled') {
-      vscode.window.showWarningMessage('Cannot generate import map for unsaved file');
+      vscode.window.showWarningMessage('Cannot generate import map for unsaved file.');
       return;
     }
     fileUri = activeTextEditor.document.uri.with({ path: activeTextEditor.document.uri.path });
-  }
-  else {
+  } else {
     const folderUri = vscode.workspace.workspaceFolders[0].uri;
     fileUri = folderUri.with({ path: folderUri.path + '/' });
   }
 
+  // Should we inject preload attributes?
   let preload = cfg.preload === 'always';
   if (cfg.preload === 'ask') {
     const choice = await vscode.window.showQuickPick([
-      { label: 'yes', description: 'Yes',  },
+      { label: 'yes', description: 'Yes', },
       { label: 'no', description: 'No' },
       { label: 'always', description: 'Yes (remember this option)' },
       { label: 'never', description: 'No (remember this option)' },
@@ -48,22 +55,31 @@ async function cmdGenerate () {
     if (!choice || !choice.label) return;
     if (choice.label === 'yes')
       preload = true;
-    else if (choice.label === 'always' || choice.label === 'never')
+    else if (choice.label === 'always' || choice.label === 'never') {
       await cfg.update('preload', choice.label, true);
+      preload = cfg.preload === 'always';
+    }
   }
 
-  let env = cfg.defaultConditions ? cfg.defaultConditions.split(',').map(item => item.trim()) : ['production', 'browser', 'module'];
-
-  const qp = vscode.window.createQuickPick();
-  qp.canSelectMany = true;
-  const items = conditions.map(name => ({ name, label: name + (name === 'module' ? ' (recommended)' : '') }));
+  // Generate list of possible environments to generate for:
+  let env = cfg.defaultConditions ?
+    cfg.defaultConditions.split(',').map(item => item.trim()) :
+    ['production', 'browser', 'module'];
+  const items = conditions.map(name => ({
+    name,
+    label: name + (name === 'module' ? ' (recommended)' : '')
+  }));
   for (const name of env) {
-    if (!items.find(({ name: n }) => n === name))
+    if (!items.find(item => item.name === name))
       items.push({ name, label: name });
   }
+
+  // Ask user which of the possible environments they want to generate for:
+  const qp = vscode.window.createQuickPick();
+  qp.canSelectMany = true;
   qp.items = items;
   let production = null;
-  function checkSetProduction (label) {
+  function checkSetProduction(label) {
     if (label === 'production') {
       if (production === false)
         return true;
@@ -85,11 +101,11 @@ async function cmdGenerate () {
   });
   production = null;
   qp.matchOnDescription = true;
-  qp.title = 'Generate: Select resolution environment conditions';
+  qp.title = 'Generate: Select environment conditions:';
   qp.show();
   qp.onDidChangeSelection((items) => {
     if (production && items.every(({ name }) => name !== 'production') ||
-        production === false && items.every(({ name }) => name !== 'development')) {
+      production === false && items.every(({ name }) => name !== 'development')) {
       production = null;
       return;
     }
@@ -140,8 +156,10 @@ async function cmdGenerate () {
         const text = doc.getText();
 
         try {
-          var output = await generator.htmlGenerate(text, {
+          const pins = await generator.addMappings(text, fileUri.toString());
+          var output = await generator.htmlInject(text, {
             htmlUrl: fileUri.toString(),
+            pins,
             preload,
             integrity: preload,
             whitespace: true,
@@ -154,23 +172,18 @@ async function cmdGenerate () {
           return;
         }
 
-        let i = 0;
-        while (output[i] === text[i] && i < text.length && i < output.length)
-          i++;
-        const rangeStart = i - 1;
-        i = 1;
-        while (output[output.length - i] === text[text.length - i] && text.length - i > rangeStart && output.length - i > rangeStart)
-          i++;
-        const rangeEnd = output.length - i + 1;
-        const textRangeEnd = text.length - i + 1;
-
-        const text2 = doc.getText();
-        if (text !== text2) {
+        const textAfter = doc.getText();
+        if (text !== textAfter) {
           vscode.window.showErrorMessage(`Document changes were made during generation - terminating import map injection. Try running generation again.`);
           return;
         }
+
         const edit = new vscode.WorkspaceEdit();
-        edit.replace(doc.uri, new vscode.Range(doc.positionAt(rangeStart), doc.positionAt(textRangeEnd)), output.slice(rangeStart, rangeEnd));
+        edit.replace(
+          doc.uri,
+          new vscode.Range(doc.positionAt(0), doc.positionAt(text.length - 1)),
+          output,
+        );
         await vscode.workspace.applyEdit(edit);
         break;
 
@@ -180,7 +193,7 @@ async function cmdGenerate () {
       case 'typescript':
       case 'typescriptreact': {
         try {
-          await generator.traceInstall(fileUri.toString());
+          await generator.link(fileUri.toString());
         }
         catch (e) {
           vscode.window.showErrorMessage(e.toString());
@@ -192,40 +205,12 @@ async function cmdGenerate () {
       }
 
       default: {
-        if (!fileUri.path.endsWith('/'))
-          fileUri = fileUri.with({ path: fileUri.path.slice(0, fileUri.lastIndexOf('/') + 1) });
-        try {
-          await generator.installPkg(fileUri.toString());
-        }
-        catch (e) {
-          vscode.window.showErrorMessage(e.toString());
-          return;
-        }
-        const doc = await vscode.workspace.openTextDocument({ content: JSON.stringify(generator.getMap(), null, 2) + '\n' });
-        vscode.window.showTextDocument(doc, { viewColumn: vscode.ViewColumn.Beside });
-        activeTextEditor.focus();
+        vscode.window.showErrorMessage("Please run import map generation from within a html/js/jsx/ts/tsx/vue source file.");
+        return;
       }
     }
     vscode.window.showInformationMessage('Generated Import Map');
-  
+
     progress.report({ increment: 100 });
   });
-
-  // await vscode.workspace.fs.writeFile(fileUri, new TextEncoder().encode('Hello world'));
-	// vscode.window.showTextDocument(fileUri);
 }
-
-// async function cmdInstall () {
-//   const input = await vscode.window.showInputBox({
-//     title: 'JSPM Install',
-//     prompt: 'Enter installation target',
-//     placeHolder: 'pkg | pkg@version | url://pkg/path'
-//   });
-//   if (!input)
-//     return;
-// }
-
-exports.activate = function (context) {
-  // context.subscriptions.push(vscode.commands.registerCommand('jspm-vscode.install', cmdInstall));
-	context.subscriptions.push(vscode.commands.registerCommand('jspm-vscode.generate', cmdGenerate));
-};
