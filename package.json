@@ -7,7 +7,7 @@
   "repository": "https://github.com/jspm/jspm-vscode",
   "icon": "jspm.png",
   "engines": {
-    "vscode": "^1.59.0"
+    "vscode": "^1.77.0"
   },
   "categories": [
     "Other"
