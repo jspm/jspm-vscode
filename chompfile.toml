@@ -1,8 +1,10 @@
 version = 0.1
 
+extensions = ['chomp@0.1:npm']
+
 [[task]]
 name = 'build'
-deps = ['src/extension.mjs', 'package-lock.json']
+deps = ['src/extension.mjs', 'npm:install']
 target = 'dist/extension.js'
 run = 'rollup -c'
 
