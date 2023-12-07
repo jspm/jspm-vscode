@@ -58,12 +58,10 @@
     ]
   },
   "devDependencies": {
-    "@jspm/generator": "^1.1.12",
-    "@jspm/plugin-rollup": "github:jspm/rollup-plugin-jspm#main",
-    "@types/vscode": "^1.77.0",
-    "@vercel/ncc": "^0.33.4",
+    "@types/vscode": "^1.84.2",
+    "@vercel/ncc": "^0.38.1",
     "chomp": "^0.2.17",
-    "cjs-module-lexer": "^1.2.2",
-    "rollup": "^2.79.1"
+    "cjs-module-lexer": "^1.2.3",
+    "jspm": "^3.1.0"
   }
 }
