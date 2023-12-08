@@ -16,6 +16,3 @@ run = 'code --extensionDevelopmentPath=$JSPM_VSCODE_PATH --extensionDevelopmentK
 [[task]]
 name = 'publish'
 run = 'vsce publish'
-
-[env]
-JSPM_VSCODE_PATH='/Users/jk/Documents/jspm/jspm-vscode'
