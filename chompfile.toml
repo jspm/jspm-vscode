@@ -4,9 +4,9 @@ extensions = ['chomp@0.1:npm']
 
 [[task]]
 name = 'build'
-deps = ['src/extension.mjs', 'npm:install']
+deps = ['src/extension.mjs', 'importmap.json', 'rollup-config.mjs']
 target = 'dist/extension.js'
-run = 'jspm build --map importmap.json --config rollup-config.mjs'
+run = 'jspm build -r @babel/helper-module-transforms=@babel/helper-module-transforms@7.21.2 --config rollup-config.mjs'
 
 [[task]]
 name = 'test'
