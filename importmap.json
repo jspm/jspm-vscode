@@ -5,11 +5,11 @@
     "production"
   ],
   "imports": {
-    "@jspm/generator": "https://ga.jspm.io/npm:@jspm/generator@1.1.12/dist/generator.js"
+    "@jspm/generator": "https://ga.jspm.io/npm:@jspm/generator@2.0.0/dist/generator.js"
   },
   "scopes": {
     "https://ga.jspm.io/": {
-      "#fetch": "https://ga.jspm.io/npm:@jspm/generator@1.1.12/dist/fetch-native.js",
+      "#fetch": "https://ga.jspm.io/npm:@jspm/generator@2.0.0/dist/fetch-native.js",
       "#lib/config/files/index.js": "https://ga.jspm.io/npm:@babel/core@7.23.5/lib/config/files/index-browser.js",
       "#lib/config/resolve-targets.js": "https://ga.jspm.io/npm:@babel/core@7.23.5/lib/config/resolve-targets-browser.js",
       "#lib/transform-file.js": "https://ga.jspm.io/npm:@babel/core@7.23.5/lib/transform-file-browser.js",
@@ -67,7 +67,7 @@
       "convert-source-map": "https://ga.jspm.io/npm:convert-source-map@2.0.0/index.js",
       "crypto": "https://ga.jspm.io/npm:@jspm/core@2.0.1/nodelibs/browser/crypto.js",
       "debug": "https://ga.jspm.io/npm:debug@4.3.4/src/browser.js",
-      "electron-to-chromium/versions": "https://ga.jspm.io/npm:electron-to-chromium@1.4.608/versions.js",
+      "electron-to-chromium/versions": "https://ga.jspm.io/npm:electron-to-chromium@1.4.609/versions.js",
       "es-module-lexer/js": "https://ga.jspm.io/npm:es-module-lexer@1.4.1/dist/lexer.asm.js",
       "escape-string-regexp": "https://ga.jspm.io/npm:escape-string-regexp@1.0.5/index.js",
       "fs": "https://ga.jspm.io/npm:@jspm/core@2.0.1/nodelibs/browser/fs.js",

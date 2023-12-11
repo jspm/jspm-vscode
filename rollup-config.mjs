@@ -3,8 +3,7 @@ export default {
   output: {
     file: "dist/extension.js",
     format: "es",
-    inlineDynamicImports: true,
-    sourcemap: "inline",
+    inlineDynamicImports: true
   },
   onwarn() {},
   plugins: [],
